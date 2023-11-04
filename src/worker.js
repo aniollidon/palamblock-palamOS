@@ -4,9 +4,26 @@ const path = require('path');
 const otrk = require('./opera-tracker');
 const axios = require("axios");
 const {getCurrentPrograms, closeProgram, uninstallProgram} = require('./windows-programs');
-
 let username = 'unknown';
 
+const AutoGitUpdate = require('auto-git-update');
+
+const config = {
+    repository: process.env.GIT_REPO,
+    fromReleases: true,
+    tempLocation: 'C:\\tmp',
+    ignoreFiles: [],
+    executeOnComplete: path.join(__dirname, 'worker.js'),
+    exitOnComplete: true
+}
+
+const updater = new AutoGitUpdate(config);
+updater.autoUpdate();
+
+// get version from package.json
+const {version} = require('../package.json');
+
+console.log("Starting PalamOS worker version " + version);
 
 try {
     // Check login on hidden file
