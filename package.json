@@ -1,0 +1,18 @@
+{
+  "name": "palamos",
+  "version": "1.0.0",
+  "dependencies": {
+    "@josephuspaye/list-open-windows": "^0.1.2",
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "extract-file-icon": "^0.3.2",
+    "get-installed-apps": "^1.1.0",
+    "killable": "^1.0.1",
+    "systeminformation": "^5.21.15"
+  },
+  "scripts": {
+    "worker": "node src/worker.js"
+  }
+}
