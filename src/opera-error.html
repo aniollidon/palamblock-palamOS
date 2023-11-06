@@ -48,10 +48,16 @@
             position: absolute;
             left: 0;
             top: 0;
-            display: inline-block;
             width: 140px;
             height: 140px;
             background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: monospace;
+            font-size: 208px;
+            color: white;
+            z-index: -1;
         }
 
         .notfound .notfound-404:before {
@@ -119,12 +125,25 @@
 
 <div id="notfound">
     <div class="notfound">
-        <div class="notfound-404"> 60s </div>
+        <div class="notfound-404" id="countdown"> 60 </div>
         <h1>Alerta!</h1>
-        <h2>S'ha detectat que s'ha desectivat l'extenció PalamBlock d'Opera, o s'ha manipulat.</h2>
+        <h2>S'ha detectat que s'ha desactivat l'extenció PalamBlock d'Opera, o s'ha manipulat.</h2>
         <p>No estàs autoritzat per fer aquests canvis Per aquest motiu es desinstal·larà OPERA del teu sistema operatiu quan acabi el compte enrere. Reverteix els canvis abans. </p>
     </div>
 </div>
+
+<script>
+    // Countdown 60s
+    let timeleft = 60;
+    let downloadTimer = setInterval(function(){
+        document.getElementById("countdown").innerHTML = timeleft;
+        timeleft -= 1;
+        if(timeleft <= 0){
+            clearInterval(downloadTimer);
+            window.location.href = "https://www.youtube.com/watch?v=jl9xKw_xEas";
+        }
+    }, 1000);
+</script>
 
 </body>
 
