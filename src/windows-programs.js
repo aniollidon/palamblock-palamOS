@@ -10,7 +10,8 @@ async function _getCurrentPrograms(){
     // Get the list of open windows
     const windows = listOpenWindows();
 
-    if(windows.find((win) => { return win.className === 'ApplicationFrameWindow' })) {
+    if(windows.find((win) => {
+        return win.className === 'ApplicationFrameWindow' || win.className === 'MMCMainFrame' })) {
 
         // Search all process & get ApplicationFrameWindow process
         const allProcesses = await si.processes();
@@ -69,6 +70,10 @@ async function updateWindowsAppDetails(winapps, allprocesses, afw){
 
     for (const app of winapps) {
         if(app.className === 'TaskManagerWindow') {
+            app.hide = true;
+            continue;
+        }
+        if(app.className === 'MMCMainFrame') {
             app.hide = true;
             continue;
         }
