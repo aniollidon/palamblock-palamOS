@@ -42,6 +42,13 @@ if %errorlevel% neq 0 (
     reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Chromium\ExtensionInstallForcelist" /v "%extension_id%" /t REG_SZ /d "%extension_value%" /f
 )
 
+:: Comprovar si la clau ja existeix per a Avast Secure Browser
+reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\AVAST Software\Browser\ExtensionInstallForcelist\%extension_id%" >nul 2>&1
+if %errorlevel% neq 0 (
+    :: Afegir la clau ExtensionInstallForcelist per a Chromium
+    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\AVAST Software\Browser\ExtensionInstallForcelist" /v "%extension_id%" /t REG_SZ /d "%extension_value%" /f
+)
+
 :: Desactivar la navegació privada en Chrome
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome" /v "IncognitoModeAvailability" /t REG_DWORD /d "1" /f
 
@@ -56,6 +63,9 @@ reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Vivaldi" /v "IncognitoModeAvailabi
 
 :: Desactivar la navegació privada a Chromium
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Chromium" /v "IncognitoModeAvailability" /t REG_DWORD /d "1" /f
+
+:: Desactivar la navegació privada a Avast Secure Browser
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\AVAST Software\Browser" /v "IncognitoModeAvailability" /t REG_DWORD /d "1" /f
 
 :: pausa l'script fins a l'interecció de l'usuari
 pause
