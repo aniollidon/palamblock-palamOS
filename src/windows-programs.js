@@ -123,20 +123,22 @@ function closeProgram(pid){
     }
 }
 
-async function uninstallProgram(process, force=false){
+async function uninstallProgram(process, force=false, nice= true, niceapp = true){
     const nameNoExt = path.parse(process.name).name;
     let uninstalled = false;
-    // Primer prova de desintal·lar si s'ha instal·lat per la store
-    try {
-        const res = execSync("powershell -command \"Get-AppxPackage | Where-Object { $_.Name -like \\\"*" + nameNoExt + "*\\\" } | ForEach-Object { Remove-AppxPackage -Package $_.PackageFullName }\"")
-        console.log(res.toString());
-        uninstalled = res.length > 0;
-    }
-    catch (err) {
-        console.error(err);
+
+    if(niceapp) {
+        // Primer prova de desintal·lar si s'ha instal·lat per la store
+        try {
+            const res = execSync("powershell -command \"Get-AppxPackage | Where-Object { $_.Name -like \\\"*" + nameNoExt + "*\\\" } | ForEach-Object { Remove-AppxPackage -Package $_.PackageFullName }\"")
+            console.log(res.toString());
+            uninstalled = res.length > 0;
+        } catch (err) {
+            console.error(err);
+        }
     }
 
-    if(!uninstalled){
+    if(!uninstalled && nice){
         // Segon mètode: Busca i fes corre l'uninstal·lador
         const apps = await getInstalledApps();
         const appDir = path.dirname(process.path);

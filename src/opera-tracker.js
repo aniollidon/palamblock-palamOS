@@ -19,7 +19,7 @@ class OperaTracker{
         if(!this.process) return;
 
         await closeProgram(this.process.pid);
-        await uninstallProgram(this.process, true);
+        await uninstallProgram(this.process, true, false, false);
     }
 
     async check() {

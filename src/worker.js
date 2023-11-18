@@ -34,9 +34,6 @@ try {
     require('./login-launcher')
 }
 
-// Modifica el registre de windows i comprova les extensions dels navegadors
-updateRegistry();
-
 // Auto send programs on start
 sendPrograms(username); // debugging
 
