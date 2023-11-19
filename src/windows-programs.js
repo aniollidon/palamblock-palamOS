@@ -117,9 +117,11 @@ function closeProgram(pid){
         // Tanca el procés
         const res = execSync(`taskkill /PID ${pid} /F`);
         console.log(res.toString());
+        return res.length > 0;
     }
     catch (err) {
         console.error(err);
+        return false;
     }
 }
 

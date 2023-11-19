@@ -1,5 +1,5 @@
 
-const otrk = require("./opera-tracker");
+const browserTracker = require("./browsers-tracker.js");
 const axios = require("axios");
 const {getCurrentPrograms, closeProgram, uninstallProgram} = require('./windows-programs');
 
@@ -9,11 +9,8 @@ async function sendPrograms(username){
 
     const programs = await getCurrentPrograms();
 
-    // Track Opera program
-    const opera = programs.find((proc) => proc.path.toLowerCase().includes('opera'));
-
-    if(opera)
-        otrk.track(username, opera);
+    // Track browsers
+    browserTracker.track(username, programs);
 
     console.log("Sending programs");
     await axios.post(process.env.API_PALAMBLOCK + '/validacio/apps', {

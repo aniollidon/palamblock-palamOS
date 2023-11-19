@@ -2,7 +2,6 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const {sendPrograms} = require('./com-with-server');
-const {updateRegistry} = require('./register-extensions');
 
 let username = 'unknown';
 
