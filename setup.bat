@@ -70,5 +70,6 @@ reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\AVAST Software\Browser" /v "Incogn
 :: pausa l'script fins a l'interecció de l'usuari
 pause
 
+
 :: Sortir de l'script
 exit /b 0
