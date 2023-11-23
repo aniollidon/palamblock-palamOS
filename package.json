@@ -15,7 +15,7 @@
   },
   "scripts": {
     "worker": "node src/worker.js",
-    "install-service": "node src/install.js",
-    "uninstall-service": "node src/uninstall.js"
+    "install-service": "node install.js",
+    "uninstall-service": "node uninstall.js"
   }
 }
