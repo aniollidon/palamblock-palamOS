@@ -5,6 +5,7 @@ const path = require('path');
 const {execSync} = require("child_process");
 const {getInstalledApps} = require("get-installed-apps");
 const fs = require("fs");
+const logger = require('./logger');
 
 async function _getCurrentPrograms(){
     // Get the list of open windows
@@ -116,11 +117,11 @@ function closeProgram(pid){
     try {
         // Tanca el procés
         const res = execSync(`taskkill /PID ${pid} /F`);
-        console.log(res.toString());
         return res.length > 0;
     }
     catch (err) {
-        console.error(err);
+        logger.error(`Error closing program ${pid}: ` + err);
+
         return false;
     }
 }
@@ -133,10 +134,9 @@ async function uninstallProgram(process, force=false, nice= true, niceapp = true
         // Primer prova de desintal·lar si s'ha instal·lat per la store
         try {
             const res = execSync("powershell -command \"Get-AppxPackage | Where-Object { $_.Name -like \\\"*" + nameNoExt + "*\\\" } | ForEach-Object { Remove-AppxPackage -Package $_.PackageFullName }\"")
-            console.log(res.toString());
             uninstalled = res.length > 0;
         } catch (err) {
-            console.error(err);
+            logger.error(`Error uninstalling ${process.name} with powershell: ` + err);
         }
     }
 
@@ -150,16 +150,14 @@ async function uninstallProgram(process, force=false, nice= true, niceapp = true
             try {
                 if(apptodelete.UninstallString) {
                     const res = execSync(apptodelete.UninstallString);
-                    console.log(res.toString());
                     uninstalled = res.length > 0;
                 }
             }
             catch (err) {
-                console.error(err);
+                logger.error(`Error uninstalling ${process.name} with uninstaller: ` + err);
                 // Torna a provar amb el paràmetre --force-uninstall
                 if(apptodelete.UninstallString) {
                     const res = execSync(apptodelete.UninstallString + " --force-uninstall");
-                    console.log(res.toString());
                     uninstalled = res.length > 0;
                 }
             }
@@ -183,7 +181,7 @@ async function uninstallProgram(process, force=false, nice= true, niceapp = true
                 uninstalled = true;
             }
             catch (err) {
-                console.error(err);
+                logger.error(`Error uninstalling ${process.name} with delete: ` + err);
             }
         }
     }

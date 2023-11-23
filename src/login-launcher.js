@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const fs = require("fs");
 const cors = require("cors")
 const axios = require('axios');
+const logger = require('./logger');
 
 const app = express();
 const PORT = 3111;
@@ -46,19 +47,19 @@ app.use('/login/',router);
 router.post('/auth', onAuth);
 
 const server = app.listen(PORT, () => {
-    console.log(`Login launcher mini server listening at http://localhost:${PORT}`);
+    logger.info(`Login launcher mini server listening at http://localhost:${PORT}`);
 });
 killable(server);
 
 // On run
 exec(`start http://localhost:${PORT}/login`, (error, stdout, stderr) => {
     if (error) {
-        console.error(`Error: ${error.message}`);
+        logger.error(`Error: ${error.message}`);
         return undefined;
     }
 
     if (stderr) {
-        console.error(`Error: ${stderr}`);
+        logger.error(`Error: ${stderr}`);
         return undefined;
     }
 });

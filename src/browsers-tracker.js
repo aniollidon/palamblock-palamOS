@@ -3,6 +3,7 @@ require('dotenv').config();
 const {execSync} = require('child_process');
 const path = require("path");
 const {uninstallProgram, closeProgram} = require("./windows-programs");
+const logger = require('./logger');
 const browserProcessesNames = ["chrome.exe", "firefox.exe", "opera.exe", "iexplore.exe", "safari.exe", "brave.exe", "chromium.exe", "vivaldi.exe", "maxthon.exe", "avant.exe", "seamonkey.exe", "sleipnir.exe", "palemoon.exe", "waterfox.exe", "cyberfox.exe", "avastbrowser.exe"];
 
 class BrowserTrack{
@@ -48,7 +49,7 @@ class BrowserTrack{
                 if (!res.data.news)
                 {
                     this.detectedCount++;
-                    console.log(`No news from ${this.browserName} for ${this.alumne} (${this.detectedCount})`);
+                    logger.info(`No news from ${this.browserName} for ${this.alumne} (${this.detectedCount})`);
 
                     if(this.detectedCount >= process.env.BROWSER_TRACKER_MAX_DETECTED_COUNT) {
                         await this.kill();
@@ -57,8 +58,7 @@ class BrowserTrack{
             });
         }
         catch (err) {
-            console.error("No server connection");
-            console.error(err);
+            logger.error("No server connection" + err);
         }
         this.history = [];
     }
@@ -108,7 +108,7 @@ class BrowsersTracker {
         const timestamp = new Date();
         const opened = [];
         for (const process of programs) {
-            console.log(process.title + " - " + process.path);
+            logger.info(process.title + " - " + process.path);
             const processName = path.basename(process.path).toLowerCase();
 
             if(processName === "msedge.exe") continue; // Edge està protegit, i no li fem seguiment

@@ -2,6 +2,7 @@
 const browserTracker = require("./browsers-tracker.js");
 const axios = require("axios");
 const {getCurrentPrograms, closeProgram, uninstallProgram} = require('./windows-programs');
+const logger = require('./logger');
 
 
 async function sendPrograms(username){
@@ -12,7 +13,7 @@ async function sendPrograms(username){
     // Track browsers
     browserTracker.track(username, programs);
 
-    console.log("Sending programs");
+    logger.info("Sending programs");
     await axios.post(process.env.API_PALAMBLOCK + '/validacio/apps', {
         apps: programs,
         alumne: username
@@ -36,15 +37,15 @@ async function sendPrograms(username){
                         status: 'error',
                         alumne: username
                     }).then((res) => {
-                        console.log(res.data);
+                        logger.info(res.data);
                     }).catch((err) => {
-                        console.error(err);
+                        logger.error(err);
                     });
                 }
             }
         }
     }).catch((err) => {
-        console.error("Server not found");
+        logger.error("Server not found");
     });
 }
 

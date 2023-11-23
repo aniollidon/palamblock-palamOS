@@ -2,6 +2,7 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const {sendPrograms} = require('./com-with-server');
+const logger = require('./logger');
 
 let username = 'unknown';
 
@@ -23,7 +24,7 @@ if(process.env.AUTO_UPDATE === "True") {
 
 // Get version from package.json
 const {version} = require('../package.json');
-console.log("Starting PalamOS worker version " + version);
+logger.info("Starting PalamOS worker version " + version);
 
 try {
     // Check login on hidden file
