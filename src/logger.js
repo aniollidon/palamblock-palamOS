@@ -1,23 +1,22 @@
-var EventLogger = require('node-windows').EventLogger;
-
+const fs = require('fs');
 class Logger {
   constructor() {
-    this.log = new EventLogger('PalamOS');
+    this.file = "palamOS.log"
   }
 
   info(message) {
-    this.log.info(message);
     console.log(message);
+    fs.appendFileSync(this.file, "INFO:" + message + "\n");
   }
 
   warn(message) {
-    this.log.warn(message);
     console.warn(message);
+    fs.appendFileSync(this.file, "WARN:" + message + "\n");
   }
 
   error(message) {
-    this.log.error(message);
     console.error(message);
+    fs.appendFileSync(this.file, "ERROR:" + message + "\n");
   }
 
 }

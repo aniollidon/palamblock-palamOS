@@ -7,7 +7,10 @@ const {getInstalledApps} = require("get-installed-apps");
 const fs = require("fs");
 const logger = require('./logger');
 
-async function _getCurrentPrograms(){
+const ApplicationFrameWindowApps = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assets",  "ApplicationFrameWindow-apps.json"), 'utf8'));
+
+
+async function _getCurrentPrograms_legacy(){
     // Get the list of open windows
     const windows = listOpenWindows();
 
@@ -25,27 +28,183 @@ async function _getCurrentPrograms(){
     return windows;
 }
 
+function _getCurrentPrograms() {
+    return new Promise(async (resolve, reject) => {
+        var exec = require('child_process').exec;
+        const allProcesses = await si.processes();
+
+        // Execute the 'tasklist' command with the specified filters and format
+        //'tasklist /v /fo csv /NH /fi  "STATUS eq RUNNING" | findstr /V /I /C:"N/D"'
+        exec('tasklist /v /fo csv /NH /fi  "STATUS eq RUNNING"', (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error: ${error.message}`);
+                return;
+            }
+
+            if (stderr) {
+                console.error(`Error: ${stderr}`);
+                return;
+            }
+
+            // Split the output into lines
+            const lines = stdout.split('\r\n');
+            // Remove the last line, which is empty
+            lines.pop();
+            // Split each csv line into an array of columns
+            const processes = lines.map(line => line.split('","'));
+            // Extract the process name from each line
+            const processNames = processes.map(process => process[0].replace('"', ''));
+            const processIds = processes.map(process => process[1]);
+            const processTitles = processes.map(process => process[8].replace('"', ''));
+
+            // create a dict with the process name as key and the process id as value
+            let significativeProcesses = {};
+            const skipTitles = ["N/A", "N/D", "", "OleMainThreadWndName", "OLEChannelWnd"];
+
+            for (let i = 0; i < processNames.length; i++) {
+
+                if (!significativeProcesses[processNames[i]])
+                    significativeProcesses[processNames[i]] = {
+                        name: processNames[i],
+                        pid: [parseInt(processIds[i])],
+                        title: skipTitles.includes(processTitles[i]) ? [] : [processTitles[i]]
+                    }
+                else {
+                    significativeProcesses[processNames[i]].pid.push(parseInt(processIds[i]));
+
+                    // check skip titles
+                    if (!skipTitles.includes(processTitles[i]))
+                        significativeProcesses[processNames[i]].title.push(processTitles[i]);
+                }
+            }
+
+            // Elimina els que no tenen títol
+            for (let key in significativeProcesses) {
+                if (significativeProcesses[key].title.length === 0)
+                    delete significativeProcesses[key];
+            }
+
+            // Busca el path dels processos
+            for (let key in significativeProcesses) {
+                const proc = allProcesses.list.find((proc) => proc.name === key);
+                if (proc) {
+                    significativeProcesses[key].processPath = [proc.path];
+                    significativeProcesses[key].parentPid = proc.parentPid;
+                }
+            }
+
+            // Get processName for parentPid
+            for (let key in significativeProcesses) {
+                const proc = allProcesses.list.find((proc) => proc.pid === significativeProcesses[key].parentPid);
+                if (proc) {
+                    significativeProcesses[key].parentName = proc.name;
+                }
+            }
+
+            // Si el parent no és explorer.exe, svchost.exe o winlogon.exe i és coincident agrupa'ls
+            for (let key in significativeProcesses) {
+                if (significativeProcesses[key].parentName !== 'explorer.exe' &&
+                    significativeProcesses[key].parentName !== 'svchost.exe' &&
+                    significativeProcesses[key].parentName !== 'winlogon.exe') {
+                    const parentname = significativeProcesses[key].parentName;
+                    const parent = significativeProcesses[parentname];
+                    if (parent) {
+                        parent.pid = parent.pid.concat(significativeProcesses[key].pid);
+                        parent.title = parent.title.concat(significativeProcesses[key].title);
+                        parent.processPath = parent.processPath.concat(significativeProcesses[key].processPath);
+                        delete significativeProcesses[key];
+                    }
+                    else if(parentname){
+                        // Create parent
+                        significativeProcesses[significativeProcesses[key].parentName] = {
+                            name: significativeProcesses[key].parentName,
+                            pid: significativeProcesses[key].pid,
+                            title: significativeProcesses[key].title,
+                            processPath: significativeProcesses[key].processPath,
+                        }
+
+                        significativeProcesses[significativeProcesses[key].parentName].pid.push(significativeProcesses[key].parentPid);
+                        delete significativeProcesses[key];
+                    }
+                }
+            }
+
+            // Canvia els titols dels CicMarshalWnd pel nom de l'aplicació sense extensió
+            for (let key in significativeProcesses) {
+                if (significativeProcesses[key].title[0].includes('CicMarshalWnd')) {
+                    significativeProcesses[key].title[0] = path.parse(significativeProcesses[key].name).name;
+                    significativeProcesses[key].relevant = true;
+                }
+            }
+
+            // si és o el parent és svchost.exe, services.exe o winlogon.exe marca com irrelevant
+            for (let key in significativeProcesses) {
+                if (significativeProcesses[key].name === 'svchost.exe' ||
+                    significativeProcesses[key].name === 'services.exe' ||
+                    significativeProcesses[key].name === 'winlogon.exe' ||
+                    significativeProcesses[key].parentName === 'svchost.exe' ||
+                    significativeProcesses[key].parentName === 'services.exe' ||
+                    significativeProcesses[key].parentName === 'winlogon.exe') {
+                    if(significativeProcesses[key].relevant === undefined)
+                        significativeProcesses[key].relevant = false
+                }
+            }
+
+            // Si el parent és explorer.exe marca com a relevant
+            for (let key in significativeProcesses) {
+                if (significativeProcesses[key].parentName === 'explorer.exe') {
+                    significativeProcesses[key].relevant = true;
+                }
+            }
+
+            for (let key in significativeProcesses) {
+                // Si no està marcat com a irrelevant, marca com a relevant
+                if(significativeProcesses[key].relevant === undefined)
+                    significativeProcesses[key].relevant = true;
+                // Filtra els processPath en blanc
+                if( significativeProcesses[key].processPath)
+                significativeProcesses[key].processPath = significativeProcesses[key].processPath.filter((path) => path !== '');
+            }
+
+            console.log(significativeProcesses);
+            resolve(significativeProcesses);
+        });
+    });
+}
+
 async function getCurrentPrograms(){
     const programs = await _getCurrentPrograms();
 
     // Prepare the list of programs to send
     const windowsPrograms = [];
-    for (let program of programs) {
+    for (let pname of Object.keys(programs)) {
+        const program = programs[pname];
         let icon = program.iconSVG;
         let iconType = 'svg';
 
-        if(!program.iconSVG) {
-            const iconBuffer = await getIcon(program.processPath);
-            icon = iconBuffer.toString('base64');
-            iconType = 'base64';
+        if(!program.relevant || icon)
+        {
+            // do nothing
+        }
+        else if(ApplicationFrameWindowApps[program.name]) {
+            icon = ApplicationFrameWindowApps[program.name].iconSVG;
+            iconType = 'svg';
+        }
+        else if(!program.iconSVG && program.processPath) {
+            if(program.processPath[0] && program.processPath[0].endsWith('.exe')) {
+                const iconBuffer = await getIcon(program.processPath[0]);
+                icon = iconBuffer.toString('base64');
+                iconType = 'base64';
+            }
         }
         windowsPrograms.push({
-            name: path.basename(program.processPath),
-            title: program.caption,
-            path: program.processPath,
+            name: program.name,
+            title: program.title.join(' - '),
+            path: program.processPath[0],
             icon: icon,
             iconType: iconType,
-            pid: program.processId
+            pid: program.pid,
+            onTaskBar: program.relevant,
         });
     }
 

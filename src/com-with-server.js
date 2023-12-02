@@ -21,13 +21,14 @@ async function sendPrograms(username){
         const doList = res.data.do;
 
         for (const process of programs) {
-            if(!doList[process.pid]) continue;
+            if(!doList[process.name]) continue;
 
-            if (doList[process.pid] === 'close' || doList[process.pid] === 'block' || doList[process.pid].includes('uninstall')) {
-                await closeProgram(process.pid);
+            if (doList[process.name] === 'close' || doList[process.name] === 'block' || doList[process.name].includes('uninstall')) {
+                for(const pid of process.pid)
+                    await closeProgram(pid);
             }
-            if (doList[process.pid].includes('uninstall')) {
-                let force = doList[process.pid].includes('force_uninstall');
+            if (doList[process.name].includes('uninstall')) {
+                let force = doList[process.name].includes('force_uninstall');
                 let uninstalled = await uninstallProgram(process, force);
 
                 if(!uninstalled){

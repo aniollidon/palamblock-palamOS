@@ -108,7 +108,8 @@ class BrowsersTracker {
         const timestamp = new Date();
         const opened = [];
         for (const process of programs) {
-            logger.info(process.title + " - " + process.path);
+            if(!process.path) continue;
+            //logger.info(process.title + " - " + process.path);
             const processName = path.basename(process.path).toLowerCase();
 
             if(processName === "msedge.exe") continue; // Edge està protegit, i no li fem seguiment
