@@ -34,15 +34,16 @@ try {
     require('./login-launcher')
 }
 
-// Auto send programs on start
-sendPrograms(username); // debugging
 
 try {
+    // Auto send programs on start
+    sendPrograms(username); // debugging
+
     setInterval(async () => {
         try {
             await sendPrograms(username);
         } catch (err) {
-            console.error(err);
+            logger.error(err);
         }
     }, process.env.UPDATE_INTERVAL * 1000)
 }
@@ -50,3 +51,5 @@ catch (err) {
     logger.error(err);
     throw err;
 }
+
+

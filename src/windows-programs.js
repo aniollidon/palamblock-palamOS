@@ -8,7 +8,7 @@ const fs = require("fs");
 const logger = require('./logger');
 
 const ApplicationFrameWindowApps = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assets",  "ApplicationFrameWindow-apps.json"), 'utf8'));
-
+const commonProcesses = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assets",  "common-processes.json"), 'utf8'));
 
 async function _getCurrentPrograms_legacy(){
     // Get the list of open windows
@@ -30,12 +30,12 @@ async function _getCurrentPrograms_legacy(){
 
 function _getCurrentPrograms() {
     return new Promise(async (resolve, reject) => {
-        var exec = require('child_process').exec;
+        const exec = require('child_process').exec;
         const allProcesses = await si.processes();
 
         // Execute the 'tasklist' command with the specified filters and format
         //'tasklist /v /fo csv /NH /fi  "STATUS eq RUNNING" | findstr /V /I /C:"N/D"'
-        exec('tasklist /v /fo csv /NH /fi  "STATUS eq RUNNING"', (error, stdout, stderr) => {
+        exec('tasklist /v /fo csv /NH', (error, stdout, stderr) => {
             if (error) {
                 console.error(`Error: ${error.message}`);
                 return;
@@ -56,6 +56,8 @@ function _getCurrentPrograms() {
             const processNames = processes.map(process => process[0].replace('"', ''));
             const processIds = processes.map(process => process[1]);
             const processTitles = processes.map(process => process[8].replace('"', ''));
+            const processUser = processes.map(
+                process => process[6].replace('"', ''));
 
             // create a dict with the process name as key and the process id as value
             let significativeProcesses = {};
@@ -63,11 +65,26 @@ function _getCurrentPrograms() {
 
             for (let i = 0; i < processNames.length; i++) {
 
+                // skip users: NT AUTHORITY\...
+                if (processUser[i].startsWith('NT AUTHORITY\\'))
+                    continue;
+
+                // si el processname no acaba en .exe
+                if (!processNames[i].endsWith('.exe'))
+                    continue;
+
+                // Si el titol és en els common-processes i és hide
+                if (commonProcesses[processNames[i].toLowerCase()] && commonProcesses[processNames[i].toLowerCase()].hide)
+                    continue;
+                else
+                    logger.info("add " + processNames[i] + "->" + commonProcesses[processNames[i].toLowerCase()]);
+
                 if (!significativeProcesses[processNames[i]])
                     significativeProcesses[processNames[i]] = {
                         name: processNames[i],
                         pid: [parseInt(processIds[i])],
-                        title: skipTitles.includes(processTitles[i]) ? [] : [processTitles[i]]
+                        title: skipTitles.includes(processTitles[i]) ? [] : [processTitles[i]],
+                        user: processUser[i],
                     }
                 else {
                     significativeProcesses[processNames[i]].pid.push(parseInt(processIds[i]));
@@ -76,13 +93,22 @@ function _getCurrentPrograms() {
                     if (!skipTitles.includes(processTitles[i]))
                         significativeProcesses[processNames[i]].title.push(processTitles[i]);
                 }
+
+                // Si el titol és en els common-processes i és relevant
+                if (commonProcesses[processNames[i]] && commonProcesses[processNames[i]].relevant)
+                    significativeProcesses[processNames[i]].relevant = true;
+
+                // si el titol és en ApplicationFrameWindowApps
+                if (ApplicationFrameWindowApps[processNames[i]])
+                    significativeProcesses[processNames[i]].relevant = true;
             }
 
             // Elimina els que no tenen títol
-            for (let key in significativeProcesses) {
+            // No tenim titols des de servei
+            /*for (let key in significativeProcesses) {
                 if (significativeProcesses[key].title.length === 0)
                     delete significativeProcesses[key];
-            }
+            }*/
 
             // Busca el path dels processos
             for (let key in significativeProcesses) {
@@ -111,6 +137,9 @@ function _getCurrentPrograms() {
                     if (parent) {
                         parent.pid = parent.pid.concat(significativeProcesses[key].pid);
                         parent.title = parent.title.concat(significativeProcesses[key].title);
+                        if(!parent.childs)
+                            parent.childs = [];
+                        parent.childs = parent.childs.concat(significativeProcesses[key].name);
                         parent.processPath = parent.processPath.concat(significativeProcesses[key].processPath);
                         delete significativeProcesses[key];
                     }
@@ -121,6 +150,7 @@ function _getCurrentPrograms() {
                             pid: significativeProcesses[key].pid,
                             title: significativeProcesses[key].title,
                             processPath: significativeProcesses[key].processPath,
+                            childs: [significativeProcesses[key].name],
                         }
 
                         significativeProcesses[significativeProcesses[key].parentName].pid.push(significativeProcesses[key].parentPid);
@@ -130,23 +160,19 @@ function _getCurrentPrograms() {
             }
 
             // Canvia els titols dels CicMarshalWnd pel nom de l'aplicació sense extensió
-            for (let key in significativeProcesses) {
+            /*for (let key in significativeProcesses) {
                 if (significativeProcesses[key].title[0].includes('CicMarshalWnd')) {
                     significativeProcesses[key].title[0] = path.parse(significativeProcesses[key].name).name;
                     significativeProcesses[key].relevant = true;
                 }
-            }
+            }*/
 
-            // si és o el parent és svchost.exe, services.exe o winlogon.exe marca com irrelevant
+            // si és a la llista de common-processes, elimnina'l si és hide
             for (let key in significativeProcesses) {
-                if (significativeProcesses[key].name === 'svchost.exe' ||
-                    significativeProcesses[key].name === 'services.exe' ||
-                    significativeProcesses[key].name === 'winlogon.exe' ||
-                    significativeProcesses[key].parentName === 'svchost.exe' ||
-                    significativeProcesses[key].parentName === 'services.exe' ||
-                    significativeProcesses[key].parentName === 'winlogon.exe') {
+                if (commonProcesses[key.toLowerCase()]
+                && commonProcesses[key.toLowerCase()].hide) {
                     if(significativeProcesses[key].relevant === undefined)
-                        significativeProcesses[key].relevant = false
+                        delete significativeProcesses[key]
                 }
             }
 
@@ -166,7 +192,12 @@ function _getCurrentPrograms() {
                 significativeProcesses[key].processPath = significativeProcesses[key].processPath.filter((path) => path !== '');
             }
 
-            console.log(significativeProcesses);
+            logger.info(significativeProcesses);
+
+            // Get all notrelevant processes
+            const notrelevant = Object.keys(significativeProcesses).filter((key) => !significativeProcesses[key].relevant);
+            logger.info("Not relevant processes:");
+            logger.info(notrelevant);
             resolve(significativeProcesses);
         });
     });
@@ -200,7 +231,7 @@ async function getCurrentPrograms(){
         windowsPrograms.push({
             name: program.name,
             title: program.title.join(' - '),
-            path: program.processPath[0],
+            path: program.processPath? program.processPath[0] : undefined,
             icon: icon,
             iconType: iconType,
             pid: program.pid,

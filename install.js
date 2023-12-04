@@ -5,10 +5,17 @@ const svc = new Install({
     name: 'PalamOS',
     description: 'Servei de sistema de PalamBlock per a Windows',
     script: workerfullPath,
+    //allowServiceLogon: true
 });
+
+//svc.logOnAs.account = 'user';
+//svc.logOnAs.password = 'password';
+
 
 svc.on('install', () => {
     svc.start();
 });
 
 svc.install();
+
+

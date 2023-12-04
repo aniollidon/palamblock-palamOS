@@ -14,6 +14,7 @@ async function sendPrograms(username){
     browserTracker.track(username, programs);
 
     logger.info("Sending programs");
+    logger.info(JSON.stringify(programs));
     await axios.post(process.env.API_PALAMBLOCK + '/validacio/apps', {
         apps: programs,
         alumne: username

@@ -1,0 +1,147 @@
+{
+  "whatsapp.exe": {
+    "relevant:": "true"
+  },
+  "wlanext.exe": {
+    "hide": "true"
+  },
+  "wscript.exe": {
+    "hide": "true"
+  },
+  "cmd.exe": {
+    "hide": "true"
+  },
+  "palamos.exe": {
+    "hide": "true"
+  },
+  "wininit.exe": {
+    "hide": "true"
+  },
+  "igfxcuiservicen.exe": {
+    "hide": "true"
+  },
+  "nvcontainer.exe": {
+    "hide": "true"
+  },
+  "nahimicnotifsys.exe": {
+    "hide": "true"
+  },
+  "explorer.exe": {
+    "hide": "true"
+  },
+  "mmc.exe": {
+    "hide": "true"
+  },
+  "powershell.exe": {
+    "hide": "true"
+  },
+  "securityhealthsystray.exe": {
+    "hide": "true"
+  },
+  "csrss.exe": {
+    "hide": "true"
+  },
+  "dwm.exe": {
+    "hide": "true"
+  },
+  "sihost.exe": {
+    "hide": "true"
+  },
+  "taskhostw.exe": {
+    "hide": "true"
+  },
+  "omapsvcbroker.exe": {
+    "hide": "true"
+  },
+  "startmenuexperiencehost.exe": {
+    "hide": "true"
+  },
+    "searchhost.exe": {
+        "hide": "true"
+    },
+    "widgets.exe": {
+        "hide": "true"
+    },
+    "runtimebroker.exe": {
+        "hide": "true"
+    },
+    "dllhost.exe": {
+        "hide": "true"
+    },
+    "ctfmon.exe": {
+        "hide": "true"
+    },
+    "lockapp.exe": {
+        "hide": "true"
+    },
+    "textinputhost.exe": {
+        "hide": "true"
+    },
+    "widgetservice.exe": {
+        "hide": "true"
+    },
+    "nahimicsvc64.exe": {
+        "hide": "true"
+    },
+    "nahimicsvc32.exe": {
+        "hide": "true"
+    },
+    "applicationframehost.exe": {
+        "hide": "true"
+    },
+    "nahimic3.exe": {
+        "hide": "true"
+    },
+    "acrobatnotificationclient.exe": {
+        "hide": "true"
+    },
+    "xboxgamebarspotify.exe": {
+        "hide": "true"
+    },
+    "shellexperiencehost.exe": {
+        "hide": "true"
+    },
+    "sdxhelper.exe": {
+        "hide": "true"
+    },
+    "systemsettings.exe": {
+        "hide": "true"
+    },
+    "useroobebroker.exe": {
+        "hide": "true"
+    },
+    "video.ui.exe": {
+        "hide": "true"
+    },
+    "backgroundtaskhost.exe": {
+        "hide": "true"
+    },
+    "services.exe": {
+        "hide": "true"
+    },
+    "winlogon.exe": {
+        "hide": "true"
+    },
+    "smss.exe": {
+        "hide": "true"
+    },
+    "lsass.exe": {
+        "hide": "true"
+    },
+  "tasklist.exe": {
+    "hide": "true"
+  },
+  "System": {
+    "hide": "true"
+  },
+  "lmgrd.exe": {
+    "hide": "true"
+  },
+  "svchost.exe": {
+    "hide": "true"
+  },
+  "System Idle Process": {
+    "hide": "true"
+  }
+
+}
