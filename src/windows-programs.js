@@ -77,7 +77,7 @@ function _getCurrentPrograms() {
                 if (commonProcesses[processNames[i].toLowerCase()] && commonProcesses[processNames[i].toLowerCase()].hide)
                     continue;
                 else
-                    logger.info("add " + processNames[i] + "->" + commonProcesses[processNames[i].toLowerCase()]);
+                    //logger.info("add " + processNames[i] + "->" + commonProcesses[processNames[i].toLowerCase()]);
 
                 if (!significativeProcesses[processNames[i]])
                     significativeProcesses[processNames[i]] = {
@@ -194,10 +194,20 @@ function _getCurrentPrograms() {
 
             logger.info(significativeProcesses);
 
+            // Si no hi ha titols i hi ha childs, agafa el nom dels childs
+            for(let key in significativeProcesses){
+                if(significativeProcesses[key].title.length === 0 && significativeProcesses[key].childs){
+                    significativeProcesses[key].title = [significativeProcesses[key].childs.join(' - ')];
+                }
+                else if(significativeProcesses[key].title.length===0){
+                    significativeProcesses[key].title = [significativeProcesses[key].name];
+                }
+            }
+
             // Get all notrelevant processes
             const notrelevant = Object.keys(significativeProcesses).filter((key) => !significativeProcesses[key].relevant);
-            logger.info("Not relevant processes:");
-            logger.info(notrelevant);
+            //logger.info("Not relevant processes:");
+            //logger.info(notrelevant);
             resolve(significativeProcesses);
         });
     });

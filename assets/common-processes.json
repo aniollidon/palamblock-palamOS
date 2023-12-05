@@ -56,82 +56,82 @@
   "startmenuexperiencehost.exe": {
     "hide": "true"
   },
-    "searchhost.exe": {
-        "hide": "true"
-    },
-    "widgets.exe": {
-        "hide": "true"
-    },
-    "runtimebroker.exe": {
-        "hide": "true"
-    },
-    "dllhost.exe": {
-        "hide": "true"
-    },
-    "ctfmon.exe": {
-        "hide": "true"
-    },
-    "lockapp.exe": {
-        "hide": "true"
-    },
-    "textinputhost.exe": {
-        "hide": "true"
-    },
-    "widgetservice.exe": {
-        "hide": "true"
-    },
-    "nahimicsvc64.exe": {
-        "hide": "true"
-    },
-    "nahimicsvc32.exe": {
-        "hide": "true"
-    },
-    "applicationframehost.exe": {
-        "hide": "true"
-    },
-    "nahimic3.exe": {
-        "hide": "true"
-    },
-    "acrobatnotificationclient.exe": {
-        "hide": "true"
-    },
-    "xboxgamebarspotify.exe": {
-        "hide": "true"
-    },
-    "shellexperiencehost.exe": {
-        "hide": "true"
-    },
-    "sdxhelper.exe": {
-        "hide": "true"
-    },
-    "systemsettings.exe": {
-        "hide": "true"
-    },
-    "useroobebroker.exe": {
-        "hide": "true"
-    },
-    "video.ui.exe": {
-        "hide": "true"
-    },
-    "backgroundtaskhost.exe": {
-        "hide": "true"
-    },
-    "services.exe": {
-        "hide": "true"
-    },
-    "winlogon.exe": {
-        "hide": "true"
-    },
-    "smss.exe": {
-        "hide": "true"
-    },
-    "lsass.exe": {
-        "hide": "true"
-    },
+  "searchhost.exe": {
+    "hide": "true"
+  },
+  "widgets.exe": {
+    "hide": "true"
+  },
+  "runtimebroker.exe": {
+    "hide": "true"
+  },
+  "dllhost.exe": {
+    "hide": "true"
+  },
+  "ctfmon.exe": {
+    "hide": "true"
+  },
+  "lockapp.exe": {
+    "hide": "true"
+  },
+  "textinputhost.exe": {
+    "hide": "true"
+  },
+  "widgetservice.exe": {
+    "hide": "true"
+  },
+  "nahimicsvc64.exe": {
+    "hide": "true"
+  },
+  "nahimicsvc32.exe": {
+    "hide": "true"
+  },
+  "applicationframehost.exe": {
+    "hide": "true"
+  },
+  "nahimic3.exe": {
+    "hide": "true"
+  },
+  "acrobatnotificationclient.exe": {
+    "hide": "true"
+  },
+  "xboxgamebarspotify.exe": {
+    "hide": "true"
+  },
+  "shellexperiencehost.exe": {
+    "hide": "true"
+  },
+  "sdxhelper.exe": {
+    "hide": "true"
+  },
+  "systemsettings.exe": {
+    "hide": "true"
+  },
+  "useroobebroker.exe": {
+    "hide": "true"
+  },
+  "video.ui.exe": {
+    "hide": "true"
+  },
+  "backgroundtaskhost.exe": {
+    "hide": "true"
+  },
+  "services.exe": {
+    "hide": "true"
+  },
+  "winlogon.exe": {
+    "hide": "true"
+  },
+  "smss.exe": {
+    "hide": "true"
+  },
+  "lsass.exe": {
+    "hide": "true"
+  },
   "tasklist.exe": {
     "hide": "true"
   },
-  "System": {
+  "system": {
     "hide": "true"
   },
   "lmgrd.exe": {
@@ -140,8 +140,46 @@
   "svchost.exe": {
     "hide": "true"
   },
-  "System Idle Process": {
+  "system idle process": {
+    "hide": "true"
+  },
+  "phoneexperiencehost.exe": {
+    "hide": "true"
+  },
+  "comppkgsrv.exe": {
+    "hide": "true"
+  },
+  "musnotifyicon.exe": {
+    "hide": "true"
+  },
+  "rundll32.exe": {
+    "hide": "true"
+  },
+  "searchapp.exe": {
+    "hide": "true"
+  },
+  "igfxcuiservice.exe':": {
+    "hide": "true"
+  },
+  "secomn64.exe": {
+    "hide": "true"
+  },
+  "networkcap.exe": {
+    "hide": "true"
+  },
+  "onedrive.exe": {
+    "hide": "true"
+  },
+  "igfxem.exe": {
+    "hide": "true"
+  },
+  "hxtsr.exe": {
+    "hide": "true"
+  },
+  "searchindexer.exe": {
+    "hide": "true"
+  },
+  "smartscreen.exe": {
     "hide": "true"
   }
-
 }

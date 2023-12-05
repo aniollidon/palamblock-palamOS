@@ -11,7 +11,7 @@ async function sendPrograms(username){
     const programs = await getCurrentPrograms();
 
     // Track browsers
-    browserTracker.track(username, programs);
+    //browserTracker.track(username, programs);
 
     logger.info("Sending programs");
     logger.info(JSON.stringify(programs));
