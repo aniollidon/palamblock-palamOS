@@ -1,6 +1,6 @@
 {
   "name": "palamos",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "dependencies": {
     "@josephuspaye/list-open-windows": "^0.1.2",
     "auto-git-update": "^2.1.2",
