@@ -185,7 +185,7 @@
   "dell.techhub.exe":{
     "hide": "true"
   },
-  "Dell.TechHub.Instrumentation.SubAgent.exe":{
+  "dell.techHub.instrumentation.subagent.exe":{
     "hide": "true"
   },
   "audiodg.exe":{
@@ -197,7 +197,7 @@
   "dell.techHub.diagnostics.subagent.exe":{
     "hide": "true"
   },
-  "Wmiprvse.exe":{
+  "wmiprvse.exe":{
     "hide": "true"
   }
 }
