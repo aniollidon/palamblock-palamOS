@@ -181,5 +181,23 @@
   },
   "smartscreen.exe": {
     "hide": "true"
+  },
+  "dell.techhub.exe":{
+    "hide": "true"
+  },
+  "Dell.TechHub.Instrumentation.SubAgent.exe":{
+    "hide": "true"
+  },
+  "audiodg.exe":{
+    "hide": "true"
+  },
+  "logonui.exe":{
+    "hide": "true"
+  },
+  "dell.techHub.diagnostics.subagent.exe":{
+    "hide": "true"
+  },
+  "Wmiprvse.exe":{
+    "hide": "true"
   }
 }
