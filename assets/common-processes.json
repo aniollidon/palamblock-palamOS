@@ -182,22 +182,28 @@
   "smartscreen.exe": {
     "hide": "true"
   },
-  "dell.techhub.exe":{
+  "dell.techhub.exe": {
     "hide": "true"
   },
-  "dell.techHub.instrumentation.subagent.exe":{
+  "dell.techHub.instrumentation.subagent.exe": {
     "hide": "true"
   },
-  "audiodg.exe":{
+  "audiodg.exe": {
     "hide": "true"
   },
-  "logonui.exe":{
+  "logonui.exe": {
     "hide": "true"
   },
-  "dell.techHub.diagnostics.subagent.exe":{
+  "dell.techHub.diagnostics.subagent.exe": {
     "hide": "true"
   },
-  "wmiprvse.exe":{
+  "wmiprvse.exe": {
+    "hide": "true"
+  },
+  "greenshot.exe": {
+    "hide": "true"
+  },
+  "esif_uf.exe": {
     "hide": "true"
   }
 }
